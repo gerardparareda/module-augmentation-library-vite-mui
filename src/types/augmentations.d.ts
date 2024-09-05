@@ -1,10 +1,7 @@
 import type {} from "@mui/material/styles";
 import type {} from "@mui/material/Button";
 
-import { ButtonPropsColorOverrides } from "@mui/material/Button";
-
 declare module '@mui/material/styles' {
-	
 	interface ICustomStyles {
 		custom?: {
 			constants?: {
@@ -25,9 +22,9 @@ declare module '@mui/material/styles' {
   interface ThemeOptions extends ICustomStyles {}
 }
 
-
 declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides {
     newCustomColorTest: true;
+		grey: true;
   }
 }

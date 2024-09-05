@@ -1,51 +1,98 @@
-# React + TypeScript + Vite
+# Module augmentation with: TypeScript + Vite + Material UI (MUI v5)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An example of module augmentation working as a library of components with mui v5. 
 
-Currently, two official plugins are available:
+Use this example with:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- https://github.com/gerardparareda/module-augmentation-app-vite-mui
 
-## Expanding the ESLint configuration
+## How to use
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. Download the project
+2. Install `npm install`
+3. Build the project `npx vite build`
 
-- Configure the top-level `parserOptions` property like this:
+You can now install the components library somewhere else.
 
+## How does it work
+
+For the module augmentation to work, you need to "export" (not in the module `export {} ...` sense, but publish) the typings file.
+
+So, when built, the `./dist` folder must include our module augmentation typings.
+
+`./dist/types/augmentations.d.ts`
 ```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+import {  } from '@mui/material/styles';
+import {  } from '@mui/material/Button';
+declare module '@mui/material/styles' {
+	interface ICustomStyles {
+		custom?: {
+			constants?: {
+				borderRadius?: number,
+				borderRadiusMinor?: number,
+				appBarHeightMobile?: number,
+				appBarHeightLaptop?: number,
+				appBarBackgroundColor?: string,
+				appBarTextColor?: string,
+				logoImage?: string,
+				logoBarImage?: string,
+				logoBarMaxHeightImage?: number
+			}
+		}
+	}
+  
+  interface Theme extends ICustomStyles {}
+  interface ThemeOptions extends ICustomStyles {}
+}
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    newCustomColorTest: true;
+		grey: true;
+  }
+}
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
+For this to work, it is imperative to import the types of those modules you are augmenting, otherwise it won't work:
+`./src/types/augmentations.d.ts`:
 ```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+import {  } from '@mui/material/styles';
+import {  } from '@mui/material/Button';
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+...
 ```
-# module-augmentation-library-vite-mui
+
+As stated here: https://github.com/mui/material-ui/issues/35743#issuecomment-1403251627
+
+My problem with ViteJS, is that these "headers"/types were excluded from the build perhaps because of rollup treeshaking or some vite-plugin-dts configuration (with `{rollupTypes: true}` it failed), generating as an example:
+`./dist/index.d.ts`
+```js
+declare module '@mui/material/styles' {
+	interface ICustomStyles {
+		custom?: {
+			constants?: {
+				borderRadius?: number,
+				borderRadiusMinor?: number,
+				appBarHeightMobile?: number,
+				appBarHeightLaptop?: number,
+				appBarBackgroundColor?: string,
+				appBarTextColor?: string,
+				logoImage?: string,
+				logoBarImage?: string,
+				logoBarMaxHeightImage?: number
+			}
+		}
+	}
+  
+  interface Theme extends ICustomStyles {}
+  interface ThemeOptions extends ICustomStyles {}
+}
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    newCustomColorTest: true;
+		grey: true;
+  }
+}
+```
+^ This didn't work, so beware.

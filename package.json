@@ -6,14 +6,8 @@
   "files": [
     "dist"
   ],
-  "module": "./dist/my-lib.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/my-lib.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
+  "module": "dist/my-lib.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

@@ -1,39 +1,27 @@
-import { createTheme, darken, lighten, alpha, Theme, ThemeOptions } from '@mui/material/styles';
-import { grey } from "@mui/material/colors";
+import { createTheme, alpha, Theme, ThemeOptions } from '@mui/material/styles';
 
 export const createBoilerplateTheme = (customConfig: ThemeOptions): Theme => {
   
-  const globalThemeConstants = {
+  const globalThemeConstants: ThemeOptions = {
+    palette: {
+      primary: {
+        main: "#6e96d8",
+      },
+      secondary: {
+        main: "#d8af6e",
+      },
+    },
     custom: {
       constants: {
-        borderRadiusMinor: "5px",
+        borderRadiusMinor: 5,
       },
     }
   };
 
   let theme = createTheme(undefined, globalThemeConstants);
-  theme = createTheme(undefined, customConfig);
+  theme = createTheme(theme, customConfig);
 
-  return createTheme(theme, {
-    palette: {
-      primary: {
-        light: lighten(theme.palette.primary.main, 0.3),
-        dark: darken(theme.palette.primary.main, 0.3),
-      },
-      secondary: {
-        light: lighten(theme.palette.secondary.main, 0.3),
-        dark: darken(theme.palette.secondary.main, 0.3),
-      },
-      // default: {...defaultColor(theme)},
-      grey: {
-        main: grey[300],
-        dark: grey[400],
-        // contrastText: "#000"
-      },
-      // black: {
-      //   main: lighten(common.black, 0.3),
-      // }
-    },
+  const customThemeOptions: ThemeOptions = {
     components: {
       MuiSwitch: {
         styleOverrides:{
@@ -61,6 +49,12 @@ export const createBoilerplateTheme = (customConfig: ThemeOptions): Theme => {
             props: { variant: "contained", color: "grey" },
             style: {
               color: theme.palette.getContrastText(theme.palette.grey[300])
+            }
+          },
+          {
+            props: { color: "newCustomColorTest" },
+            style: {
+              backgroundColor: "red"
             }
           },
           {
@@ -170,11 +164,7 @@ export const createBoilerplateTheme = (customConfig: ThemeOptions): Theme => {
         }
       }
     },
-    custom: {
-      constants: {
-        defaultButtonColor: "grey",
-        logoBarMaxHeightImage: 64,
-      },
-    },
-  });
-};
+  };
+
+  return createTheme(theme, customThemeOptions);
+}
