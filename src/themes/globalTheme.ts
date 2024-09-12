@@ -14,6 +14,7 @@ export const createBoilerplateTheme = (customConfig: ThemeOptions): Theme => {
     custom: {
       constants: {
         borderRadiusMinor: 5,
+        
       },
     }
   };

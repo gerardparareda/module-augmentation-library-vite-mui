@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     dts({
       copyDtsFiles: true,
-      tsconfigPath: './tsconfig.app.json', 
+      tsconfigPath: './tsconfig.build.json', 
       // rollupTypes: true, 
     }),
   ],
