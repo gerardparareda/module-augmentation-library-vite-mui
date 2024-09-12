@@ -89,6 +89,20 @@ src/
 }
 
 ```
+`./vite.config.ts`
+```
+...
+export default defineConfig({
+  plugins: [
+    react(),
+    dts({
+      copyDtsFiles: true,
+      tsconfigPath: './tsconfig.build.json', 
+    }),
+  ],
+  ...
+})
+```
 
 ### For the consumer application
 For the module augmentation to work, you need to "export" (not in the module `export {} ...` sense, but publish) the typings file.
